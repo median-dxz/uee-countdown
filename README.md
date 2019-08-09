@@ -1,6 +1,6 @@
 # uee-countdown
 
-
+高考倒计时动效，基于vue和electron构建桌面端
 
 ## Project setup
 
