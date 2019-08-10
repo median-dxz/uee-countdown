@@ -1,86 +1,78 @@
-var txt = document.getElementById("text");
-var day = { target: null, num: null };
-var gapl = { v: 0 };
+var elText = document.getElementById("text");
+var elMain = document.getElementById("main");
 
 /** @type {HTMLCanvasElement} */
 var canvas = document.getElementById("rings");
 var ctx = setupCanvas(canvas);
 
+var screenWidth = window.innerHeight;
+var screenHeight = window.innerHeight;
+var centerPointX = Math.floor(screenWidth / 2);
+var centerPointY = Math.floor(screenHeight / 2);
+
+var fontSize = 16;
+
+var lines = [];
+
+var timeLast = null;
+var fps = 1000 / 60;
+
 window.onload = () => {
-  day = getUeeDay();
+  setTween();
 
-  var tweenText = new TWEEN.Tween(day);
-  var tweenFadeIn = new TWEEN.Tween(gapl);
-
-  tweenFadeIn
-    .to({ v: 1 }, 2000)
-    .easing(TWEEN.Easing.Quartic.InOut)
-    .start();
-
-  tweenText
-    .delay(1000)
-    .to({ num: day.target }, 3000)
-    .easing(TWEEN.Easing.Cubic.Out)
-    .start();
-
-  for (let i = 0; i < 60; i++) {
-    let k = new startLines();
+  for (let i = 0; i * 7 + 120 <= screenHeight; i++) {
+    let k = new startLines(7*i+120);
     lines.push(k);
     k.drawStart();
   }
   animate();
 };
 
-function animate() {
-  txt.innerHTML = Math.floor(day.num);
-  document.getElementById("main").style.opacity = gapl.v;
+function animate(timeNow) {
+  timeLast = timeLast || timeNow;
+
+  if (timeNow - timeLast > fps) {
+    timeLast = timeNow;
+    linesDraw();
+  }
+
   requestAnimationFrame(animate);
   TWEEN.update();
 }
 
-var screenWidth = window.innerHeight;
-var screenHeight = window.innerHeight;
-var centerPointX = Math.floor(screenWidth / 2);
-var centerPointY = Math.floor(screenHeight / 2);
-var fontSize = 16;
-
-var lines = [];
-var alpha = 0;
-
 class startLines {
-  constructor() {
+  constructor(_radius) {
     this.positionX = centerPointX;
     this.positionY = centerPointY;
-    this.radius = random(fontSize * 10 + 10, screenHeight / 2);
+    this.radius = _radius || random(fontSize * 10 + 10, screenHeight / 2);
 
-    this.red = Math.floor(Math.random() * 155) + 100;
-    this.green = Math.floor(Math.random() * 155) + 100;
-    this.blue = Math.floor(Math.random() * 155) + 100;
-    // this.opacity = random(40, 100) / 10;
+    // this.red = Math.floor(Math.random() * 155) + 100;
+    // this.green = Math.floor(Math.random() * 155) + 100;
+    // this.blue = Math.floor(Math.random() * 155) + 100;
+
     this.opacity = 1;
 
-    this.lineWidth = 1.5;
-    // this.lineWidth = 20;
-    this.speed = deg2arc(random(0, 30));
+    this.speed = globalSpeed || deg2arc(random(0, 30));
 
     this.startRadio = -deg2arc(random(0, 360));
-    this.endRadio = this.startRadio + deg2arc(random(0, 120));
+    this.endRadio = this.startRadio + deg2arc(random(45, 90));
   }
 
   animate() {
-    this.startRadio += this.speed / 60;
-    this.endRadio += this.speed / 60;
+    this.startRadio += deg2arc(this.speed) / 60;
+    this.endRadio += deg2arc(this.speed) / 60;
     this.drawStart();
   }
 
-  drawStart = function() {
-    var color = "rgba(" + this.red + "," + this.green + "," + this.blue + "," + this.opacity + ")";
+  drawStart() {
+    // var color = "rgba(" + this.red + "," + this.green + "," + this.blue + "," + this.opacity + ")";
+    var color = "rgba(255,255,255,1)"
     ctx.beginPath();
-    ctx.lineWidth = this.lineWidth;
+    ctx.lineWidth = this.lineWidth || globalLineWidth;
     ctx.arc(this.positionX, this.positionY, this.radius, this.startRadio, this.endRadio);
     ctx.strokeStyle = color;
     ctx.stroke();
-  };
+  }
 }
 
 function recovery(arr, index) {
@@ -92,28 +84,3 @@ function recovery(arr, index) {
   }
   return tempArr;
 }
-
-// setInterval(function() {
-//   var starLine = new startLines();
-//   lines.push(starLine);
-//   starLine.drawStart();
-//   for (var i = 0; i < lines.length; i++) {
-//     if (lines[i].startRadio > (Math.PI * 3) / 4) {
-//       lines = recovery(lines, i);
-//     }
-//   }
-//   if (lines.length > 20) {
-//     lines.shift();
-//   }
-// }, 1000);
-
-setInterval(function() {
-  ctx.fillStyle = "rgba(0,0,0,0.8)";
-  ctx.globalCompositeOperation = "destination-in";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.globalCompositeOperation = "destination-over";
-  for (var _i = 0, lines_1 = lines; _i < lines_1.length; _i++) {
-    var item = lines_1[_i];
-    item.animate();
-  }
-}, 20);
