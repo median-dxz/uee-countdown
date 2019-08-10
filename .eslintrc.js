@@ -31,5 +31,7 @@ module.exports = {
     "no-extra-parens": 0,
     "no-multi-str": 0,
     "no-multiple-empty-lines": [0, { max: 3 }],
+    "no-undef": 0,
+    "no-unused-vars": 0,
   },
 };

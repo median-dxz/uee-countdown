@@ -9,3 +9,9 @@ function arc2deg(arc) {
 function deg2arc(deg) {
   return Math.fround((deg / 180) * Math.PI);
 }
+
+function getUeeDay() {
+  var target = Math.floor((new Date("2020/6/7 9:00") - Date.now()) / (24 * 60 * 60 * 1000));
+  var num = random(target + 100, 999);
+  return { target: target, num: num };
+}

@@ -13,7 +13,6 @@
   justify-content: center;
   align-items: center;
   align-content: center;
-  background-color: rgba(0, 0, 0, 0.3);
 }
 
 #text {
@@ -32,5 +31,6 @@
 
 #rings {
   position: fixed;
-  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 80px 80px rgba(0, 0, 0, 0.3);
 }

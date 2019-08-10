@@ -1,30 +1,27 @@
 var txt = document.getElementById("text");
-var day = { target: Math.floor((new Date("2020/6/7 9:00") - Date.now()) / (24 * 60 * 60 * 1000)), num: null };
+var day = { target: null, num: null };
+var gapl = { v: 0 };
 
 /** @type {HTMLCanvasElement} */
 var canvas = document.getElementById("rings");
-var ctx = canvas.getContext("2d");
-
-var scale = window.devicePixelRatio || 1;
+var ctx = setupCanvas(canvas);
 
 window.onload = () => {
-  var tween = new TWEEN.Tween(day);
+  day = getUeeDay();
 
-  day.num = random(day.target + 100, 999);
+  var tweenText = new TWEEN.Tween(day);
+  var tweenFadeIn = new TWEEN.Tween(gapl);
 
-  tween
+  tweenFadeIn
+    .to({ v: 1 }, 2000)
+    .easing(TWEEN.Easing.Quartic.InOut)
+    .start();
+
+  tweenText
+    .delay(1000)
     .to({ num: day.target }, 3000)
     .easing(TWEEN.Easing.Cubic.Out)
     .start();
-
-  canvas.width = window.innerHeight * scale;
-  canvas.height = window.innerHeight * scale;
-
-  canvas.style.width = window.innerHeight + "px";
-  canvas.style.height = window.innerHeight + "px";
-
-  ctx.globalAlpha = 0.9;
-  ctx.scale(scale, scale); //再来设置比例
 
   for (let i = 0; i < 60; i++) {
     let k = new startLines();
@@ -36,6 +33,7 @@ window.onload = () => {
 
 function animate() {
   txt.innerHTML = Math.floor(day.num);
+  document.getElementById("main").style.opacity = gapl.v;
   requestAnimationFrame(animate);
   TWEEN.update();
 }
