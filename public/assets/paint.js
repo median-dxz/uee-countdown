@@ -1,6 +1,6 @@
 const globalAlpha = 0.9;
-const globalLineWidth = 1.5;
-const globalSpeed = 10;//deg
+const globalLineWidth = 2;
+const globalSpeed = 10; //deg
 
 function setupCanvas(canvas) {
   var dpr = window.devicePixelRatio || 1;
@@ -16,8 +16,8 @@ function setupCanvas(canvas) {
 
   ctx.globalAlpha = globalAlpha;
   ctx.lineCap = "round";
-  ctx.shadowBlur = 15;
-  ctx.shadowColor = "rgba(255,255,255,0.8)";
+  ctx.imageSmoothingQuality = "high";
+  ctx.shadowBlur = 4;
 
   ctx.scale(dpr, dpr);
   return ctx;
@@ -41,8 +41,8 @@ function setTween() {
   tweenText
     .delay(1000)
     .to({ num: day.target }, 4000)
-    .easing(TWEEN.Easing.Cubic.Out)
-    .onUpdate((obj) => (elText.innerHTML = Math.floor(day.num)))
+    .easing(TWEEN.Easing.Circular.Out)
+    .onUpdate((obj) => (elText.innerHTML = Math.floor(obj.num)))
     .onComplete(() => tweenText.stop(), (pannelOpacity = { v: 1 }))
     .start();
 

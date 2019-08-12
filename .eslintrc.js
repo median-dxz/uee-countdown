@@ -11,9 +11,9 @@ module.exports = {
     es6: true,
   },
 
-  extends: ["plugin:vue/essential", "@vue/prettier"],
+  extends: ["plugin:vue/essential"],
 
-  plugins: ["vue", "prettier"],
+  plugins: ["vue"],
 
   globals: {
     __static: true,

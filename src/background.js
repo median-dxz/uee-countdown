@@ -2,8 +2,11 @@
 
 import { app, protocol, BrowserWindow } from "electron";
 import { createProtocol, installVueDevtools } from "vue-cli-plugin-electron-builder/lib";
-const isDevelopment = process.env.NODE_ENV !== "production";
 
+const isDevelopment = process.env.NODE_ENV !== "production";
+const fs = require("fs");
+const path = require("path");
+const fileLocation = path.join(__static, "running.json");
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
@@ -14,8 +17,14 @@ protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: tru
 function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    useContentSize: true,
+    center: true,
+    alwaysOnTop: true,
+    fullscreen: true,
+    transparent: true,
+    frame: false,
+    resizable: false,
+    skipTaskbar: true,
     webPreferences: {
       nodeIntegration: true,
     },
@@ -24,12 +33,16 @@ function createWindow() {
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     win.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
-    if (!process.env.IS_TEST) win.webContents.openDevTools();
+    // if (!process.env.IS_TEST) win.webContents.openDevTools();
   } else {
     createProtocol("app");
     // Load the index.html when not in development
     win.loadURL("app://./index.html");
   }
+
+  win.once("ready-to-show", () => {
+    win.show();
+  });
 
   win.on("closed", () => {
     win = null;
@@ -70,7 +83,19 @@ app.on("ready", async () => {
     //   console.error('Vue Devtools failed to install:', e.toString())
     // }
   }
-  createWindow();
+  let data = fs.readFileSync(fileLocation, "utf8");
+  let date = new Date().getDate();
+  data = JSON.parse(data);
+  if (data["today"] !== date) {
+    data["today"] = date;
+    data = JSON.stringify(data);
+    fs.writeFile(fileLocation, data, "utf8", (err) => {
+      console.error(err);
+    });
+    createWindow();
+  } else {
+    app.quit();
+  }
 });
 
 // Exit cleanly on request from parent process in development mode.
