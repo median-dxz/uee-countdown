@@ -165,13 +165,15 @@ class startLines {
   }
 
   drawStart() {
-    var color = "rgba(" + this.red + "," + this.green + "," + this.blue + "," + this.opacity + ")";
+    // var color = "rgba(" + this.red + "," + this.green + "," + this.blue + "," + this.opacity + ")";
+	var color = "rgba(255,255,255,1)";
     ctx.save();
     ctx.beginPath();
     ctx.lineWidth = this.lineWidth || globalLineWidth;
     ctx.arc(this.positionX, this.positionY, this.radius, this.startRadio, this.endRadio);
     ctx.strokeStyle = color;
-    ctx.shadowColor = "rgba(" + this.red + "," + this.green + "," + this.blue + ",0.8)";
+	 ctx.shadowColor = color;
+    // ctx.shadowColor = "rgba(" + this.red + "," + this.green + "," + this.blue + ",0.8)";
     ctx.stroke();
     ctx.restore();
   }
