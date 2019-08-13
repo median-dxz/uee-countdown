@@ -28,27 +28,28 @@ var fontSize = 16;
 var lines = [];
 
 var timeLast = null;
-var fps = 1000 / 40;
+var fps = 1000 / 30;
+
 const globalAlpha = 0.9;
 const globalLineWidth = 2;
 const globalSpeed = 10; //deg
 
-function setupCanvas(canvasSrc) {
+function setupCanvas(canvas) {
   var dpr = window.devicePixelRatio || 1;
   /** @type {CanvasRenderingContext2D} */
   var ctx = canvas.getContext("2d");
 
-  canvasSrc.width = window.innerHeight * dpr;
-  canvasSrc.height = window.innerHeight * dpr;
+  canvas.width = window.innerHeight * dpr;
+  canvas.height = window.innerHeight * dpr;
 
-  canvasSrc.style.borderRadius = window.innerHeight + "px";
-  canvasSrc.style.width = window.innerHeight + "px";
-  canvasSrc.style.height = window.innerHeight + "px";
+  canvas.style.borderRadius = window.innerHeight + "px";
+  canvas.style.width = window.innerHeight + "px";
+  canvas.style.height = window.innerHeight + "px";
 
   ctx.globalAlpha = globalAlpha;
   ctx.lineCap = "round";
   ctx.imageSmoothingQuality = "high";
-  ctx.shadowBlur = 4;
+  ctx.shadowBlur = 2;
 
   ctx.scale(dpr, dpr);
   return ctx;
@@ -77,14 +78,14 @@ function setTween() {
     .onComplete(() => tweenText.stop(), (pannelOpacity = { v: 1 }))
     .start();
 
-  var tweenFadeOut = new TWEEN.Tween(pannelOpacity);
-  tweenFadeOut
-    .delay(8000)
-    .to({ v: 0 }, 2000)
-    .easing(TWEEN.Easing.Linear.None)
-    .onUpdate((obj) => (elMain.style.opacity = obj.v))
-    .onComplete(() => tweenFadeOut.stop())
-    .start();
+   var tweenFadeOut = new TWEEN.Tween(pannelOpacity);
+   tweenFadeOut
+     .delay(8000)
+     .to({ v: 0 }, 2000)
+     .easing(TWEEN.Easing.Linear.None)
+     .onUpdate((obj) => (elMain.style.opacity = obj.v))
+     .onComplete(() => tweenFadeOut.stop())
+     .start();
 }
 
 function linesDraw() {
@@ -175,6 +176,7 @@ class startLines {
     ctx.restore();
   }
 }
+
 function random(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
@@ -188,10 +190,11 @@ function deg2arc(deg) {
 }
 
 function getUeeDay() {
-  var target = Math.floor((new Date("2020/6/7 9:00") - Date.now()) / (24 * 60 * 60 * 1000));
+  var target = Math.floor((new Date("2020/6/7 0:00") - Date.now()) / (24 * 60 * 60 * 1000)) + 1;
   var num = random(target + 100, 999);
   return { target: target, num: num };
 }
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
