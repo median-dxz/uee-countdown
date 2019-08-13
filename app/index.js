@@ -1,9 +1,9 @@
-var elText = document.getElementById("text");
-var elMain = document.getElementById("main");
+var elText = null;
+var elMain = null;
 
 /** @type {HTMLCanvasElement} */
-var canvas = document.getElementById("rings");
-var ctx = setupCanvas(canvas);
+var canvas = null;
+var ctx = null;
 
 var screenWidth = window.innerHeight;
 var screenHeight = window.innerHeight;
@@ -15,16 +15,24 @@ var fontSize = 16;
 var lines = [];
 
 var timeLast = null;
-var fps = 1000 / 60;
+var fps = 1000 / 30;
 
 window.onload = () => {
-  setTween();
+  elText = document.getElementById("text");
+  elMain = document.getElementById("main");
+  canvas = document.getElementById("rings");
+  ctx = setupCanvas(canvas);
+  for (let i = 0; i * 7 + 160 <= screenHeight / 2; i++) {
+    let k = new startLines(7 * i + 160);
+    if (!i) {
+      k = new startLines(7 * i + 160, 360);
+    }
 
-  for (let i = 0; i * 7 + 120 <= screenHeight; i++) {
-    let k = new startLines(7*i+120);
     lines.push(k);
     k.drawStart();
   }
+
+  setTween();
   animate();
 };
 
@@ -34,53 +42,54 @@ function animate(timeNow) {
   if (timeNow - timeLast > fps) {
     timeLast = timeNow;
     linesDraw();
+    TWEEN.update(timeNow);
   }
 
   requestAnimationFrame(animate);
-  TWEEN.update();
 }
 
 class startLines {
-  constructor(_radius) {
+  constructor(_radius, _startRadio) {
     this.positionX = centerPointX;
     this.positionY = centerPointY;
     this.radius = _radius || random(fontSize * 10 + 10, screenHeight / 2);
 
-    // this.red = Math.floor(Math.random() * 155) + 100;
-    // this.green = Math.floor(Math.random() * 155) + 100;
-    // this.blue = Math.floor(Math.random() * 155) + 100;
+    this.red = Math.floor(Math.random() * 35) + 220;
+    this.green = Math.floor(Math.random() * 35) + 220;
+    this.blue = Math.floor(Math.random() * 35) + 220;
 
     this.opacity = 1;
 
-    this.speed = globalSpeed || deg2arc(random(0, 30));
+    this.speed = random(20, 80);
 
     this.startRadio = -deg2arc(random(0, 360));
-    this.endRadio = this.startRadio + deg2arc(random(45, 90));
+    this.endRadio = _startRadio || this.startRadio + deg2arc(random(75, 120));
+
+    // this.direction = random(0, 1);
+    this.direction = 1;
   }
 
   animate() {
-    this.startRadio += deg2arc(this.speed) / 60;
-    this.endRadio += deg2arc(this.speed) / 60;
+    if (this.direction) {
+      this.startRadio += deg2arc(this.speed) / 60;
+      this.endRadio += deg2arc(this.speed) / 60;
+    } else {
+      this.startRadio -= deg2arc(this.speed) / 60;
+      this.endRadio -= deg2arc(this.speed) / 60;
+    }
+
     this.drawStart();
   }
 
   drawStart() {
-    // var color = "rgba(" + this.red + "," + this.green + "," + this.blue + "," + this.opacity + ")";
-    var color = "rgba(255,255,255,1)"
+    var color = "rgba(" + this.red + "," + this.green + "," + this.blue + "," + this.opacity + ")";
+    ctx.save();
     ctx.beginPath();
     ctx.lineWidth = this.lineWidth || globalLineWidth;
     ctx.arc(this.positionX, this.positionY, this.radius, this.startRadio, this.endRadio);
     ctx.strokeStyle = color;
+    ctx.shadowColor = "rgba(" + this.red + "," + this.green + "," + this.blue + ",0.8)";
     ctx.stroke();
+    ctx.restore();
   }
-}
-
-function recovery(arr, index) {
-  var tempArr = [];
-  for (var i = 0; i < arr.length; i++) {
-    if (i != index) {
-      tempArr.push(arr[i]);
-    }
-  }
-  return tempArr;
 }

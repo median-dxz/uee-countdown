@@ -11,7 +11,7 @@ function deg2arc(deg) {
 }
 
 function getUeeDay() {
-  var target = Math.floor((new Date("2020/6/7 9:00") - Date.now()) / (24 * 60 * 60 * 1000));
+  var target = Math.floor((new Date("2020/6/7 0:00") - Date.now()) / (24 * 60 * 60 * 1000)) + 1;
   var num = random(target + 100, 999);
   return { target: target, num: num };
 }
