@@ -78,14 +78,19 @@ function setTween() {
     .onComplete(() => tweenText.stop(), (pannelOpacity = { v: 1 }))
     .start();
 
-   var tweenFadeOut = new TWEEN.Tween(pannelOpacity);
-   tweenFadeOut
-     .delay(8000)
-     .to({ v: 0 }, 2000)
-     .easing(TWEEN.Easing.Linear.None)
-     .onUpdate((obj) => (elMain.style.opacity = obj.v))
-     .onComplete(() => tweenFadeOut.stop())
-     .start();
+  var tweenFadeOut = new TWEEN.Tween(pannelOpacity);
+  tweenFadeOut
+    .delay(8000)
+    .to({ v: 0 }, 2000)
+    .easing(TWEEN.Easing.Linear.None)
+    .onUpdate((obj) => (elMain.style.opacity = obj.v))
+    .onStop(() => {
+      setTimeout(() => {
+        window.close();
+      }, 2000);
+    })
+    .onComplete(() => tweenFadeOut.stop())
+    .start();
 }
 
 function linesDraw() {
@@ -166,13 +171,13 @@ class startLines {
 
   drawStart() {
     // var color = "rgba(" + this.red + "," + this.green + "," + this.blue + "," + this.opacity + ")";
-	var color = "rgba(255,255,255,1)";
+    var color = "rgba(255,255,255,1)";
     ctx.save();
     ctx.beginPath();
     ctx.lineWidth = this.lineWidth || globalLineWidth;
     ctx.arc(this.positionX, this.positionY, this.radius, this.startRadio, this.endRadio);
     ctx.strokeStyle = color;
-	 ctx.shadowColor = color;
+    ctx.shadowColor = color;
     // ctx.shadowColor = "rgba(" + this.red + "," + this.green + "," + this.blue + ",0.8)";
     ctx.stroke();
     ctx.restore();
@@ -196,7 +201,6 @@ function getUeeDay() {
   var num = random(target + 100, 999);
   return { target: target, num: num };
 }
-
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

@@ -18,4 +18,11 @@ module.exports = {
       .set("common", resolve("src/common"))
       .set("components", resolve("src/components"));
   },
+  pluginOptions: {
+    electronBuilder: {
+      builderOptions: {
+        asar:false,
+      }
+    }
+  }
 };

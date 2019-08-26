@@ -53,6 +53,7 @@ function createWindow() {
 app.on("window-all-closed", () => {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
+  console.log("uee-cd closed");
   if (process.platform !== "darwin") {
     app.quit();
   }
@@ -86,6 +87,7 @@ app.on("ready", async () => {
   let data = fs.readFileSync(fileLocation, "utf8");
   let date = new Date().getDate();
   data = JSON.parse(data);
+  console.log(data["today"], date);
   if (data["today"] !== date) {
     data["today"] = date;
     data = JSON.stringify(data);
