@@ -87,7 +87,8 @@ app.on("ready", async () => {
   let data = fs.readFileSync(fileLocation, "utf8");
   let date = new Date().getDate();
   data = JSON.parse(data);
-  console.log(data["today"], date);
+  global.year = data["year"];
+  console.log(data["year"],data["today"], date);
   if (data["today"] !== date) {
     data["today"] = date;
     data = JSON.stringify(data);

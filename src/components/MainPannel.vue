@@ -31,7 +31,7 @@ var timeLast = null;
 var fps = 1000 / 30;
 
 const globalAlpha = 0.9;
-const globalLineWidth = 2;
+const globalLineWidth = 1;
 const globalSpeed = 10; //deg
 
 function setupCanvas(canvas) {
@@ -197,7 +197,8 @@ function deg2arc(deg) {
 }
 
 function getUeeDay() {
-  var target = Math.floor((new Date("2020/6/7 0:00") - Date.now()) / (24 * 60 * 60 * 1000)) + 1;
+  var year = String(window.require("electron").remote.getGlobal("year"));
+  var target = Math.floor((new Date(year + "/6/7 0:00") - Date.now()) / (24 * 60 * 60 * 1000)) + 1;
   var num = random(target + 100, 999);
   return { target: target, num: num };
 }
